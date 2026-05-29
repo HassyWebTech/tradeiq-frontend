@@ -1,70 +1,228 @@
-# Getting Started with Create React App
+# TradeIQ — AI-Powered Customer Intelligence for African SMBs
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> *Know your customer. Before they know what they want.*
 
-## Available Scripts
+TradeIQ is a full-stack AI application that transforms raw customer transaction data into actionable behavioral intelligence. It builds deep customer personas, detects churn risk, and generates personalised re-engagement messages — purpose-built for small and medium businesses across Africa.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Problem
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Small businesses across Africa — fashion vendors, food sellers, salon owners, online shops — process hundreds of customer transactions but have zero intelligence about who their customers are, why they return, or why they leave silently. Enterprise CRM tools like Salesforce and HubSpot are too expensive and too complex. The gap between "nothing" and "enterprise software" is wide open.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+TradeIQ fills that gap.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+- **Persona Engine** — builds a structured behavioral profile per customer from raw CSV data
+- **Churn Risk Detection** — classifies each customer as Active, At Risk, High Risk, or Lost based on their individual purchase frequency pattern
+- **LLM Re-engagement Recommender** — generates personalised WhatsApp messages for at-risk customers using Groq (Llama 3.3 70B)
+- **REST API** — clean FastAPI backend with 5 endpoints and auto-generated OpenAPI docs
+- **React Dashboard** — professional frontend with customer health chart, revenue summary, customer table, and recommendations view
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Tech Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Layer | Technology |
+|---|---|
+| Backend | FastAPI (Python) |
+| LLM | Groq API — Llama 3.3 70B |
+| Data Processing | Pandas |
+| ML | Scikit-learn |
+| Auth | JWT + bcrypt |
+| Database | SQLite (local) / PostgreSQL (production) |
+| Frontend | React |
+| Charts | Recharts |
+| Backend Deploy | Render |
+| Frontend Deploy | Vercel |
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Architecture
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+Customer CSV Upload
+        ↓
+FastAPI Backend (Render)
+        ↓
+Persona Engine → builds behavioral profile per customer
+        ↓
+Churn Detector → classifies risk based on purchase frequency ratio
+        ↓
+Groq LLM → generates personalised re-engagement message
+        ↓
+React Frontend (Vercel) → renders dashboard, table, recommendations
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project Structure
 
-## Learn More
+```
+tradeiq/
+├── app/
+│   ├── core/
+│   │   ├── persona_engine.py     # Persona builder + churn logic
+│   │   └── recommender.py        # Groq LLM re-engagement generator
+│   ├── api/
+│   │   └── __init__.py
+│   ├── models/
+│   │   └── __init__.py
+│   └── main.py                   # FastAPI app + all endpoints
+├── data/
+│   └── sample_customers.csv      # Sample Nigerian SMB customer data
+├── .env.example
+├── Procfile
+├── requirements.txt
+├── runtime.txt
+└── README.md
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## API Endpoints
 
-### Code Splitting
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Health check |
+| POST | `/upload` | Upload customer CSV |
+| GET | `/dashboard` | Returns summary stats |
+| GET | `/personas` | Returns all customer personas |
+| GET | `/recommendations` | Returns LLM-generated re-engagement messages |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Full interactive docs available at `/docs` (Swagger UI).
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Getting Started
 
-### Making a Progressive Web App
+### Prerequisites
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Python 3.11+
+- Node.js 18+
+- Groq API key — free at [console.groq.com](https://console.groq.com)
 
-### Advanced Configuration
+### Backend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+# Clone the repo
+git clone https://github.com/HassyWebTech/tradeiq.git
+cd tradeiq
 
-### Deployment
+# Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+# Install dependencies
+pip install -r requirements.txt
 
-### `npm run build` fails to minify
+# Configure environment
+cp .env.example .env
+# Add your GROQ_API_KEY to .env
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Start the server
+uvicorn app.main:app --reload
+```
+
+API will be running at `http://127.0.0.1:8000`
+Interactive docs at `http://127.0.0.1:8000/docs`
+
+### Frontend Setup
+
+```bash
+# Clone frontend repo
+git clone https://github.com/HassyWebTech/tradeiq-frontend.git
+cd tradeiq-frontend
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm start
+```
+
+Frontend will be running at `http://localhost:3000`
+
+---
+
+## CSV Format
+
+TradeIQ accepts a CSV file with the following columns:
+
+```
+customer_name, phone, last_purchase_date, purchase_count,
+total_spend, products_bought, purchase_frequency_days
+```
+
+Example row:
+```
+Amaka Obi,08012345678,2026-05-10,12,45000,"Ankara fabric, Lace material",7
+```
+
+A sample file is included at `data/sample_customers.csv`.
+
+---
+
+## Churn Risk Logic
+
+Churn risk is calculated as a ratio of days since last purchase to the customer's individual purchase frequency — not a fixed threshold.
+
+```
+ratio = days_since_purchase / purchase_frequency_days
+
+ratio < 1.0   → Active
+ratio < 2.0   → At Risk
+ratio < 3.0   → High Risk
+ratio >= 3.0  → Lost
+```
+
+This means a customer who buys every 5 days is flagged sooner than one who buys every 30 days — personalised to their own behaviour pattern.
+
+---
+
+## Live Demo
+
+- **Frontend:** [https://tradeiq-frontend-tau.vercel.app](https://tradeiq-frontend-tau.vercel.app)
+- **API:** [https://tradeiq-xlam.onrender.com](https://tradeiq-xlam.onrender.com)
+- **API Docs:** [https://tradeiq-xlam.onrender.com/docs](https://tradeiq-xlam.onrender.com/docs)
+
+> Note: The backend is on Render's free tier and may take 30-50 seconds to wake up on first request.
+
+---
+
+## Environment Variables
+
+```
+APP_NAME=TradeIQ
+SECRET_KEY=your-secret-key
+DATABASE_URL=sqlite:///./tradeiq.db
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+GROQ_API_KEY=your-groq-api-key
+```
+
+---
+
+## Roadmap
+
+- [ ] WhatsApp Business API integration — send messages directly from the dashboard
+- [ ] Paystack and Flutterwave transaction sync — no CSV upload needed
+- [ ] Multi-business support — one account, multiple shop profiles
+- [ ] Fine-tuned LLM on Nigerian business communication patterns
+- [ ] Mobile app — iOS and Android
+
+---
+
+## Author
+
+**Hassan Yakubu** — AI Engineer
+[GitHub](https://github.com/HassyWebTech) · [LinkedIn](https://linkedin.com/in/hassan-yakubu)
+
+---
+
+## License
+
+MIT License — free to use, modify, and distribute.
